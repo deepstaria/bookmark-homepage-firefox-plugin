@@ -9,7 +9,7 @@ browser.runtime.onInstalled.addListener(function() {
     },
     generalSettings: {
       settingsChanged: true
-      customCDD: "" 
+      customCSS: "" 
     }
   });
 });

@@ -5,31 +5,32 @@ function createBookmarkTree(bookmarks, parentElement, visibilitySettings, folder
 
   bookmarks.forEach((bookmark) => {
     if (bookmark.children) {
-      /* set folder id prefix if not skipping */
-      if (bookmark.title === "Bookmarks Menu") {
-        if (!visibilitySettings.bookmarksMenu) {
+      // Set folder id prefix if not skipping 
+      const folderMapping = {
+        "Bookmarks Menu": { visibilityKey: "bookmarksMenu", prefix: "FM" },
+        "Bookmarks Toolbar": { visibilityKey: "bookmarksToolbar", prefix: "FT" },
+        "Other Bookmarks": { visibilityKey: "otherBookmarks", prefix: "FO" },
+        "Mobile Bookmarks": { visibilityKey: "mobileBookmarks", prefix: "FM" }
+      };
+
+      // Set folder prefix and initialize folder count if applicable
+      if (folderMapping[bookmark.title]) {
+        const folderInfo = folderMapping[bookmark.title];
+        
+        // Check visibility setting
+        if (!visibilitySettings[folderInfo.visibilityKey]) {
           return;
         }
-        folderCat = "FM";
-        folderCount = {count:0}
-      } else if (bookmark.title === "Bookmarks Toolbar") {
-        if (!visibilitySettings.bookmarksToolbar) {
+        
+        folderCat = folderInfo.prefix;
+        folderCount = { count: 0 };
+
+        // Count number of visible categories, only show contents if only one categorty enabled
+        const catCount = Object.values(visibilitySettings).filter(value => value === true).length;
+        if( catCount <= 1) {
+          createBookmarkTree(bookmark.children, parentElement, visibilitySettings, folderStates, folderCat, folderCount);
           return;
         }
-        folderCat = "FT";
-        folderCount = {count:0}
-      } else if (bookmark.title === "Other Bookmarks") {
-        if (!visibilitySettings.otherBookmarks) { 
-          return;
-        }
-        folderCat = "FO";
-        folderCount = {count:0}
-      } else if (bookmark.title === "Mobile Bookmarks") {
-        if (!visibilitySettings.mobileBookmarks) {
-          return;
-        }
-        folderCat = "FM";
-        folderCount = {count:0}
       } 
 
       // Recursively handle bookmark folders
@@ -52,6 +53,11 @@ function createBookmarkTree(bookmarks, parentElement, visibilitySettings, folder
         folderLabel.className = 'folder_label';
         folderLabel.htmlFor = folderToggle.id;
         folderLabel.textContent = bookmark.title;
+
+        // Check if there are children and add the has-children class
+        if (bookmark.children && bookmark.children.length > 0) {
+          folderLabel.classList.add('has-children');
+        }
 
         folderItem.appendChild(folderToggle);
         folderItem.appendChild(folderLabel);
@@ -119,6 +125,11 @@ function loadBookmarks() {
         mobileBookmarks: true
       };
 
+      const generalSettings = data.generalSettings || {
+        settingsChanged: true,
+        customCSS: ''
+      };
+
       const folderStates = data.folderStates || {};
 
       // console.log('Bookmark tree:', bookmarkTreeNodes);
@@ -132,9 +143,9 @@ function loadBookmarks() {
         styleElement.textContent += data.generalSettings.customCSS;
       }
 
-      data.generalSettings.settingsChanged = false;
+      generalSettings.settingsChanged = false;
       browser.storage.sync.set({
-        generalSettings: data.generalSettings
+        generalSettings: generalSettings
       });
     });
   });
@@ -143,6 +154,7 @@ function loadBookmarks() {
 // Load bookmarks when page loaded, and visibility change
 document.addEventListener('DOMContentLoaded', loadBookmarks);
 document.addEventListener('visibilitychange', () => {
+  // update page if visibilty changed
   if (!document.hidden) {
     browser.storage.sync.get('generalSettings').then(function(data) {
 
