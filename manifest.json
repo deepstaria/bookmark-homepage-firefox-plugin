@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
-      "id": "bookmark-homepage@example.com"
+      "id": "bookmark-homepage@deepstaria"
     }
   },
   "name": "Bookmark Homepage",
-  "version": "1.0",
+  "version": "0.1",
   "description": "Displays all bookmarks as the homepage.",
   "permissions": [
     "bookmarks",

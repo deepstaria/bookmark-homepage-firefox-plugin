@@ -8,7 +8,7 @@ browser.runtime.onInstalled.addListener(function() {
       mobileBookmarks: true
     },
     generalSettings: {
-      settingsChanged: true
+      settingsChanged: true,
       customCSS: "" 
     }
   });
