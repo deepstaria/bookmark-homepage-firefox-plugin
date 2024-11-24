@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Extension Options</title>
+  <style>
+    body {
+      font-family: Ariel, san-serif;
+    }
+
+    input[type="checkbox"], label {
+      -webkit-user-drag: none; /* Prevent drag-and-drop in webkit-based browsers */
+      user-select: none; /* Prevent accidental text selection */
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      user-select: text; /* Enable text selection for labels */
+    }
+  </style>
+</head>
+<body>
+  <h1>Extension Settings</h1>
+  <form id="settingsForm">
+    <label><input type="checkbox" id="bookmarksMenu"> Show Main Bookmarks</label>
+    <label><input type="checkbox" id="bookmarksToolbar"> Show Toolbar Bookmarks</label>
+    <label><input type="checkbox" id="otherBookmarks"> Show Other Bookmarks</label>
+    <label><input type="checkbox" id="mobileBookmarks"> Show Mobile Bookmarks</label>
+
+    <label>Custom CSS:</label>
+    <textarea id="cssInput" placeholder="Enter your custom CSS here..."></textarea>
+    <button type="button" id="saveButton">Save Settings</button>
+  </form>
+  <script src="options.js"></script>
+</body>
+</html>  
+
